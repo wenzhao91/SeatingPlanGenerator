@@ -1,0 +1,105 @@
+<h2>Step 1:Input your entire student list in csv format</h2>
+
+<form #studentForm=ngForm (ngSubmit)="firePopulateList(studentForm.value)">
+  <div>
+    <textarea name="studentInput" cols="40" rows="5" placeholder="David, 1&#10;John, 2" style="resize: none;"
+              ngModel></textarea></div>
+  <button mat-raised-button color="primary">Enter</button>
+</form>
+
+<cdk-virtual-scroll-viewport [itemSize]=10 matSort style="height: 40%">
+  <table mat-table [dataSource]="students" class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let student"> {{student.name}} </td>
+    </ng-container>
+
+
+    <!-- Index Number Column -->
+    <ng-container matColumnDef="indexNumber">
+      <th mat-header-cell *matHeaderCellDef>Index No.</th>
+      <td mat-cell *matCellDef="let student"> {{student.indexNumber}} </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</cdk-virtual-scroll-viewport>
+
+<h2>Step 2: Setup your classroom</h2>
+<form #classroomForm=ngForm (ngSubmit)="confirmClassRoomConfig(classroomForm.value)">
+  <div>
+    <p>
+      <mat-form-field appearance="outline">
+        <mat-label>Number of rows</mat-label>
+        <input name="rowCount" matInput placeholder="1" ngModel>
+        <mat-hint>Input an integer > 0</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Number of columns</mat-label>
+        <input name="colCount" matInput placeholder="1" ngModel>
+        <mat-hint>Input an integer > 0</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Minimum index number</mat-label>
+        <input name="minId" matInput placeholder="1" ngModel>
+        <mat-hint>Input an integer > 0</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Max index number</mat-label>
+        <input name="maxId" matInput placeholder="1" ngModel>
+        <mat-hint>Input an integer > minimum index number</mat-hint>
+      </mat-form-field>
+    </p>
+    <button mat-raised-button color="primary">Enter</button>
+  </div>
+</form>
+
+<h3>Seating Plan:</h3>
+<table>
+  <tr *ngFor="let row of classRoom.seatingPlan; ">
+    <td *ngFor="let field of row">
+      {{field.indexNumber}}
+    </td>
+  </tr>
+</table>
+
+
+<h3>Attendance List:</h3>
+<table mat-table [dataSource]="classRoom.students" class="mat-elevation-z8">
+
+  <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let student"> {{student.name}} </td>
+  </ng-container>
+
+
+  <!-- Index Number Column -->
+  <ng-container matColumnDef="indexNumber">
+    <th mat-header-cell *matHeaderCellDef>Index No.</th>
+    <td mat-cell *matCellDef="let student"> {{student.indexNumber}} </td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="isPresent">
+    <th mat-header-cell *matHeaderCellDef>Is Present?</th>
+    <td mat-cell *matCellDef="let student">           </td>
+  </ng-container>
+
+
+  <tr mat-header-row *matHeaderRowDef="attendanceColumns; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns:attendanceColumns;"></tr>
+</table>
+
+<h2>Step 3: Confirm the current setup and Print</h2>
+<button mat-raised-button color="primary" (click)="print()">Print</button>
